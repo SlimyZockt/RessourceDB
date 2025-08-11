@@ -1,19 +1,28 @@
 @tool
 extends EditorPlugin
 
-const DATA_PATH = "res://data"
+var db_path := "res://data"
 var filesystem: EditorFileSystem
-var db = {}
-var db_script := ""
+var db := {}
+var db_script := "" 
+var file_popup := EditorFileDialog.new() 
 
+func select_path(path: String):
+	db_path = path
 
 func _enter_tree():
+	file_popup.file_mode = EditorFileDialog.FILE_MODE_OPEN_DIR
+	file_popup.filters = PackedStringArray([""])
+	file_popup.dir_selected.connect(select_path)
 	filesystem = EditorInterface.get_resource_filesystem()
 	filesystem.filesystem_changed.connect(_on_filesystem_changed)
-	add_autoload_singleton("DB", "res://addons/autogendb/database.gd")
+	EditorInterface.get_editor_main_screen().add_child(file_popup)
+	add_autoload_singleton("DB", "res://addons/ressourcedb/database.gd")
+	add_tool_menu_item("Set DB Path", file_popup.popup_file_dialog)
 
 func _on_filesystem_changed():
-	var dir = DirAccess.open(DATA_PATH)
+	if not DirAccess.dir_exists_absolute(db_path): return
+	var dir = DirAccess.open(db_path)
 	db = {}
 	gen_db(dir)
 	db_script = "extends Node \n\n"	
@@ -24,10 +33,10 @@ func _on_filesystem_changed():
 			db_script += "	&\"" + inner_key + "\": "+ db[key][inner_key] +", \n" 
 		db_script += "}\n"
 	
-	if FileAccess.file_exists("res://addons/autogendb/database.gd"):
-		var file = FileAccess.open("res://addons/autogendb/database.gd", FileAccess.READ)
+	if FileAccess.file_exists("res://addons/ressourcedb/database.gd"):
+		var file = FileAccess.open("res://addons/ressourcedb/database.gd", FileAccess.READ)
 		if file.get_as_text() == db_script: return 
-	var file = FileAccess.open("res://addons/autogendb/database.gd", FileAccess.WRITE)
+	var file = FileAccess.open("res://addons/ressourcedb/database.gd", FileAccess.WRITE)
 	file.store_string(db_script)
 
 func gen_db(source: DirAccess):

@@ -15,7 +15,7 @@ config/features=PackedStringArray("4.4", "Forward Plus")
 
 [autoload]
 
-DB="*res://addons/autogendb/database.gd"
+DB="*res://addons/ressourcedb/database.gd"
 
 [editor_plugins]
 
