@@ -19,4 +19,4 @@ DB="*res://addons/ressourcedb/database.gd"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/autogendb/plugin.cfg")
+enabled=PackedStringArray("res://addons/ressourcedb/plugin.cfg")
