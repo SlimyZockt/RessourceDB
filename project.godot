@@ -17,6 +17,14 @@ config/features=PackedStringArray("4.4", "Forward Plus")
 
 DB="*res://addons/ressourcedb/database.gd"
 
+[debug]
+
+gdscript/warnings/assert_always_false=2
+
+[display]
+
+display_server/driver.linuxbsd="wayland"
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/ressourcedb/plugin.cfg")
